@@ -21,12 +21,22 @@ namespace GestorEstoque
 
         public void AdicionarEntrada()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Adicionar vaga no curso: {nome}");
+            Console.WriteLine($"Digite a quantidade de vagas que você deseja adicionar:");
+            int entrada = int.Parse(Console.ReadLine());
+            vagas += entrada;
+            Console.WriteLine("Entrada registrada!");
+            Console.ReadLine();
         }
 
         public void AdicionarSaida()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Consumir vaga no curso: {nome}");
+            Console.WriteLine($"Digite a quantidade de vagas que você deseja consumir:");
+            int saida = int.Parse(Console.ReadLine());
+            vagas -= saida;
+            Console.WriteLine("Saída registrada!");
+            Console.ReadLine();
         }
 
         public void Exibir()

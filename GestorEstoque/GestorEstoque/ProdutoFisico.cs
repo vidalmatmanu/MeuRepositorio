@@ -21,12 +21,22 @@ namespace GestorEstoque
 
         public void AdicionarEntrada()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Adicionar entrada no estoque do produto: {nome}");
+            Console.WriteLine($"Digite a quantidade que você deseja dar entrada:");
+            int entrada = int.Parse(Console.ReadLine());  
+            estoque += entrada;
+            Console.WriteLine("Entrada registrada!");
+            Console.ReadLine();
         }
 
         public void AdicionarSaida()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Adicionar saída no estoque do produto: {nome}");
+            Console.WriteLine($"Digite a quantidade que você deseja dar baixa:");
+            int saida = int.Parse(Console.ReadLine());
+            estoque -= saida;
+            Console.WriteLine("Saída registrada!");
+            Console.ReadLine();
         }
 
         public void Exibir()

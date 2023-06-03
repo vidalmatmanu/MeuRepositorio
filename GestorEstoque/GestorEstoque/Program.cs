@@ -12,7 +12,7 @@ namespace GestorEstoque
     {
         static List<IEstoque> produtos = new List<IEstoque>();
         enum Menu { Listar = 1, Adicionar, Remover, Entrada, Saida, Sair }
-        enum OpcaoProduto { ProdutoFísico = 1, Livro, Curso }
+        enum OpcaoProduto { ProdutoFísico = 1, Ebook, Curso }
         static void Main(string[] args)
         {
             Carregar();
@@ -41,8 +41,10 @@ namespace GestorEstoque
                             Remover();
                             break;
                         case Menu.Entrada:
+                            Entrada();
                             break;
                         case Menu.Saida:
+                            Saida();
                             break;
                         case Menu.Sair:
                             escolheuSair = true;
@@ -83,11 +85,35 @@ namespace GestorEstoque
             }
         }
 
+        static void Entrada()
+        {
+            Listagem();
+            Console.WriteLine("Digite o ID do produto que você deseja dar entrada:");
+            int id = int.Parse(Console.ReadLine());
+            if (id >= 0 && id < produtos.Count)
+            {
+                produtos[id].AdicionarEntrada();
+                Salvar();
+            }
+        }
+
+        static void Saida()
+        {
+            Listagem();
+            Console.WriteLine("Digite o ID do produto que você deseja dar baixa:");
+            int id = int.Parse(Console.ReadLine());
+            if (id >= 0 && id < produtos.Count)
+            {
+                produtos[id].AdicionarSaida();
+                Salvar();
+            }
+        }
+
         static void Cadastro()
         {
 
             Console.WriteLine("Cadastro de produto:");
-            Console.WriteLine("1 - Produto Físico\n2 - Livro\n3 - Curso");
+            Console.WriteLine("1 - Produto Físico\n2 - E-book\n3 - Curso");
             string opcEsc = Console.ReadLine();
             int escolhaInt = int.Parse(opcEsc);
             OpcaoProduto opcaoProduto = (OpcaoProduto)escolhaInt;
@@ -97,8 +123,8 @@ namespace GestorEstoque
                 case OpcaoProduto.ProdutoFísico:
                     CadastrarProdFisico();
                     break;
-                case OpcaoProduto.Livro:
-                    CadastrarLivro();
+                case OpcaoProduto.Ebook:
+                    CadastrarEbook();
                     break;
                 case OpcaoProduto.Curso:
                     CadastrarCurso();
@@ -122,18 +148,18 @@ namespace GestorEstoque
             Salvar();
         }
 
-        static void CadastrarLivro()
+        static void CadastrarEbook()
         {
-            Console.WriteLine("Cadastrando livro:");
-            Console.WriteLine("Nome do livro:");
+            Console.WriteLine("Cadastrando E-book:");
+            Console.WriteLine("Nome do E-book:");
             string nome = Console.ReadLine();
-            Console.WriteLine("Preço do livro:");
+            Console.WriteLine("Preço do E-book:");
             float preco = float.Parse(Console.ReadLine());
-            Console.WriteLine("Autor do livro:");
+            Console.WriteLine("Autor do E-book:");
             string autor = Console.ReadLine();
 
-            Livro livro = new Livro(nome, preco, autor);
-            produtos.Add(livro);
+            Ebook ebook = new Ebook(nome, preco, autor);
+            produtos.Add(ebook);
             Salvar();
         }
 
