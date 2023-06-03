@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,11 +10,12 @@ namespace GestorEstoque
 {
     internal class Program
     {
-        static List<IEstoque> Produtos = new List<IEstoque>();
+        static List<IEstoque> produtos = new List<IEstoque>();
         enum Menu { Listar = 1, Adicionar, Remover, Entrada, Saida, Sair }
         enum OpcaoProduto { ProdutoFísico = 1, Livro, Curso }
         static void Main(string[] args)
         {
+            Carregar();
             bool escolheuSair = false;
             while (!escolheuSair)
             {
@@ -29,11 +32,13 @@ namespace GestorEstoque
                     switch (escolha)
                     {
                         case Menu.Listar:
+                            Listagem();
                             break;
                         case Menu.Adicionar:
                             Cadastro();
                             break;
                         case Menu.Remover:
+                            Remover();
                             break;
                         case Menu.Entrada:
                             break;
@@ -51,6 +56,31 @@ namespace GestorEstoque
                 Console.Clear();
             }
 
+        }
+
+        static void Listagem()
+        {
+            Console.WriteLine("Lista de produtos:");
+            int id = 0;
+            foreach (IEstoque produto in produtos)
+            {
+                Console.WriteLine($"ID: {id}");
+                produto.Exibir();
+                id++;
+            }
+            Console.ReadLine();
+        }
+
+        static void Remover()
+        {
+            Listagem();
+            Console.WriteLine("Digite o ID do produto que você deseja remover:");
+            int id = int.Parse(Console.ReadLine());
+            if (id >= 0 && id < produtos.Count)
+            {
+                produtos.RemoveAt(id);
+                Salvar();
+            }
         }
 
         static void Cadastro()
@@ -88,7 +118,8 @@ namespace GestorEstoque
             float frete = float.Parse(Console.ReadLine());
 
             ProdutoFisico pf = new ProdutoFisico(nome, preco, frete);
-            Produtos.Add(pf);
+            produtos.Add(pf);
+            Salvar();
         }
 
         static void CadastrarLivro()
@@ -102,7 +133,8 @@ namespace GestorEstoque
             string autor = Console.ReadLine();
 
             Livro livro = new Livro(nome, preco, autor);
-            Produtos.Add(livro);
+            produtos.Add(livro);
+            Salvar();
         }
 
         static void CadastrarCurso()
@@ -116,7 +148,40 @@ namespace GestorEstoque
             string autor = Console.ReadLine();
 
             Curso curso = new Curso(nome, preco, autor);
-            Produtos.Add(curso);
+            produtos.Add(curso);
+            Salvar();
+        }
+
+        static void Salvar()
+        {
+            FileStream salvandoOsArquivos = new FileStream("produtosEstoque.dat", FileMode.OpenOrCreate);
+            BinaryFormatter codificandoArquivos = new BinaryFormatter();
+
+            codificandoArquivos.Serialize(salvandoOsArquivos, produtos);
+
+            salvandoOsArquivos.Close();
+        }
+
+        static void Carregar()
+        {
+            FileStream salvandoOsArquivos = new FileStream("produtosEstoque.dat", FileMode.OpenOrCreate);
+            BinaryFormatter codificandoArquivos = new BinaryFormatter();
+
+            try
+            {
+                produtos = (List<IEstoque>)codificandoArquivos.Deserialize(salvandoOsArquivos);
+
+                if (produtos == null)
+                {
+                    produtos = new List<IEstoque>();
+                }
+            }
+            catch (Exception ex)
+            {
+                produtos = new List<IEstoque>();
+            }
+
+            salvandoOsArquivos.Close();
         }
     }
 }
